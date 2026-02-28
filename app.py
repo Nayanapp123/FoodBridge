@@ -229,9 +229,13 @@ def request_food():
     flash('💛 Request sent! The hotel will confirm shortly.', 'success')
     return redirect(url_for('ngo_dashboard'))
 
+
 if __name__ == '__main__':
     if not os.path.exists('database'):
         os.makedirs('database')
     if not os.path.exists(DB_PATH):
         init_db()
-    app.run(debug=True)
+
+    # Read port from environment (Render supplies PORT); default to 5000 locally
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
