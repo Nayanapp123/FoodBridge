@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: foodbridge
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+```
+
+**Step 3 — Push to GitHub again** and Render will redeploy automatically.
+
+---
+
+Also make sure your `requirements.txt` is named correctly — earlier it was `recquirements.txt`. In your GitHub repo check it's spelled `requirements.txt` exactly! 
+
+After redeployment the logs should show:
+```
+==> Running 'gunicorn app:app' ✅
