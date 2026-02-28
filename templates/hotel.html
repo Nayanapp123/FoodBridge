@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}Hotel Dashboard — FoodBridge{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-profile">
+            <div class="profile-avatar">🏨</div>
+            <div>
+                <p class="profile-name">{{ session.get('name', 'Hotel Partner') }}</p>
+                <p class="profile-type">Hotel / Restaurant</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#post" class="sidebar-link active">📤 Post Surplus</a>
+            <a href="#history" class="sidebar-link">📋 My Listings</a>
+            <a href="#impact" class="sidebar-link">🌟 My Impact</a>
+            <a href="#claimed" class="sidebar-link">✅ Claimed Food</a>
+        </nav>
+        <a href="/logout" class="sidebar-logout">← Logout</a>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="dash-header">
+            <h1>Good to see you! <span class="accent">Let's share some food.</span></h1>
+            <p>Every listing you post can feed dozens of people today.</p>
+        </div>
+
+        <!-- Post Surplus Food Form -->
+        <section class="dash-section" id="post">
+            <div class="section-card">
+                <h2 class="card-heading">📤 Post Surplus Food</h2>
+                <form method="POST" action="/hotel/post-food" class="food-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Food Name / Description</label>
+                            <input type="text" name="food_name" placeholder="e.g. Veg Biryani, Paneer Curry, Mixed Salad" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Food Category</label>
+                            <select name="category" required>
+                                <option value="">Select category</option>
+                                <option>Rice & Biryani</option>
+                                <option>Bread & Rotis</option>
+                                <option>Curries & Gravies</option>
+                                <option>Snacks & Starters</option>
+                                <option>Desserts</option>
+                                <option>Beverages</option>
+                                <option>Salads & Sides</option>
+                                <option>Packaged / Sealed Food</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Quantity Available</label>
+                            <input type="number" name="quantity" placeholder="e.g. 40" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity Unit</label>
+                            <select name="unit" required>
+                                <option value="">Select unit</option>
+                                <option>Portions / Plates</option>
+                                <option>Kilograms (kg)</option>
+                                <option>Litres (L)</option>
+                                <option>Packets</option>
+                                <option>Boxes</option>
+                                <option>Trays</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Prepared At (Time)</label>
+                            <input type="time" name="prepared_at" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Best Before (Time — stays fresh until)</label>
+                            <input type="time" name="best_before" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Food Type</label>
+                            <div class="radio-group">
+                                <label class="radio-label"><input type="radio" name="food_type" value="veg" checked> 🟢 Vegetarian</label>
+                                <label class="radio-label"><input type="radio" name="food_type" value="nonveg"> 🔴 Non-Vegetarian</label>
+                                <label class="radio-label"><input type="radio" name="food_type" value="vegan"> 🌿 Vegan</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Contains Allergens?</label>
+                            <div class="checkbox-group">
+                                <label class="check-label"><input type="checkbox" name="allergens" value="nuts"> Nuts</label>
+                                <label class="check-label"><input type="checkbox" name="allergens" value="dairy"> Dairy</label>
+                                <label class="check-label"><input type="checkbox" name="allergens" value="gluten"> Gluten</label>
+                                <label class="check-label"><input type="checkbox" name="allergens" value="eggs"> Eggs</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Pickup Address</label>
+                        <input type="text" name="pickup_address" placeholder="Full address for NGO pickup" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Special Instructions (optional)</label>
+                        <textarea name="instructions" placeholder="e.g. Please bring your own containers, call before arrival, food is packed in trays..." rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Contact Person & Phone</label>
+                        <div class="form-row">
+                            <input type="text" name="contact_name" placeholder="Contact name">
+                            <input type="tel" name="contact_phone" placeholder="Phone number">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">🚀 Post Surplus Food</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Active Listings -->
+        <section class="dash-section" id="history">
+            <div class="section-card">
+                <h2 class="card-heading">📋 Active Listings</h2>
+                {% if listings %}
+                    <div class="listings-grid">
+                        {% for item in listings %}
+                        <div class="listing-card {{ 'claimed' if item.claimed else 'available' }}">
+                            <div class="listing-top">
+                                <span class="listing-name">{{ item.food_name }}</span>
+                                <span class="listing-badge {{ 'badge-claimed' if item.claimed else 'badge-available' }}">
+                                    {{ '✅ Claimed' if item.claimed else '🟢 Available' }}
+                                </span>
+                            </div>
+                            <p class="listing-detail">{{ item.quantity }} {{ item.unit }} · {{ item.category }}</p>
+                            <p class="listing-time">Best before: {{ item.best_before }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>🍽️ No active listings yet. Post your first surplus food above!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Impact Stats -->
+        <section class="dash-section" id="impact">
+            <div class="section-card">
+                <h2 class="card-heading">🌟 Your Impact</h2>
+                <div class="impact-grid">
+                    <div class="impact-card">
+                        <span class="impact-num">{{ impact.meals_shared or 0 }}</span>
+                        <span class="impact-label">Meals Shared</span>
+                    </div>
+                    <div class="impact-card">
+                        <span class="impact-num">{{ impact.kg_saved or 0 }} kg</span>
+                        <span class="impact-label">Food Saved</span>
+                    </div>
+                    <div class="impact-card">
+                        <span class="impact-num">{{ impact.ngos_helped or 0 }}</span>
+                        <span class="impact-label">NGOs Helped</span>
+                    </div>
+                    <div class="impact-card">
+                        <span class="impact-num">{{ impact.co2_saved or 0 }} kg</span>
+                        <span class="impact-label">CO₂ Avoided</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Claimed Food Section -->
+<section class="dash-section" id="claimed">
+    <div class="section-card">
+        <h2 class="card-heading">✅ Claimed Food</h2>
+        {% if listings %}
+            <div class="listings-grid">
+                {% for item in listings if item['is_claimed'] %}
+                <div class="listing-card claimed">
+                    <div class="listing-top">
+                        <span class="listing-name">{{ item['food_name'] }}</span>
+                        <span class="listing-badge badge-claimed">✅ Claimed</span>
+                    </div>
+                    <p class="listing-detail">{{ item['quantity'] }} {{ item['unit'] }} · {{ item['category'] }}</p>
+                    <p class="listing-time">Best before: {{ item['best_before'] }}</p>
+                    <p class="listing-time" style="margin-top:6px; color: var(--green);">
+                        🤝 Picked up by an NGO
+                    </p>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <p>🍽️ None of your listings have been claimed yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>🍽️ No claimed food yet. Post surplus food to get started!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+    </main>
+</div>
+{% endblock %}

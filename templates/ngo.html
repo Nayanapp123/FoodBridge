@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}NGO Dashboard — FoodBridge{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <aside class="sidebar sidebar-ngo">
+        <div class="sidebar-profile">
+            <div class="profile-avatar">💛</div>
+            <div>
+                <p class="profile-name">{{ session.get('name', 'NGO Partner') }}</p>
+                <p class="profile-type">NGO Organization</p>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#available" class="sidebar-link active">🍽️ Available Food</a>
+            <a href="#myrequests" class="sidebar-link">📬 My Requests</a>
+            <a href="#impact" class="sidebar-link">❤️ Community Impact</a>
+            <a href="#profile" class="sidebar-link">⚙️ NGO Profile</a>
+        </nav>
+        <a href="/logout" class="sidebar-logout">← Logout</a>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="dash-header">
+            <h1>Hello! <span class="accent">Food is waiting for you.</span></h1>
+            <p>Browse available surplus food near you and request a pickup.</p>
+        </div>
+
+        <!-- Search + Filter Bar -->
+        <section class="dash-section" id="available">
+            <div class="section-card">
+                <div class="filter-bar">
+                    <h2 class="card-heading">🍽️ Available Food Near You</h2>
+                    <div class="filter-controls">
+                        <input type="text" id="search-food" placeholder="🔍 Search food..." oninput="filterFood()" class="filter-input">
+                        <select id="filter-type" onchange="filterFood()" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="veg">🟢 Veg</option>
+                            <option value="nonveg">🔴 Non-Veg</option>
+                            <option value="vegan">🌿 Vegan</option>
+                        </select>
+                        <select id="filter-category" onchange="filterFood()" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option>Rice & Biryani</option>
+                            <option>Curries & Gravies</option>
+                            <option>Bread & Rotis</option>
+                            <option>Snacks & Starters</option>
+                            <option>Desserts</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="food-cards-grid" id="food-listing">
+                    {% if available_food %}
+                        {% for item in available_food %}
+                        <div class="food-card" data-type="{{ item.food_type }}" data-category="{{ item.category }}" data-name="{{ item.food_name | lower }}">
+                            <div class="food-card-top">
+                                <div>
+                                    <h3 class="food-card-name">{{ item.food_name }}</h3>
+                                    <p class="food-card-hotel">🏨 {{ item.hotel_name }}</p>
+                                </div>
+                                <span class="food-type-badge type-{{ item.food_type }}">
+                                    {{ '🟢 Veg' if item.food_type == 'veg' else ('🔴 Non-Veg' if item.food_type == 'nonveg' else '🌿 Vegan') }}
+                                </span>
+                            </div>
+                            <div class="food-card-body">
+                                <div class="food-detail-row">
+                                    <span>📦 {{ item.quantity }} {{ item.unit }}</span>
+                                    <span>🏷️ {{ item.category }}</span>
+                                </div>
+                                <div class="food-detail-row">
+                                    <span>⏰ Fresh until: <strong>{{ item.best_before }}</strong></span>
+                                    <span class="freshness-tag {{ 'urgent' if item.hours_left < 2 else 'fresh' }}">
+                                        {{ '⚡ Urgent' if item.hours_left < 2 else '✅ Fresh' }}
+                                    </span>
+                                </div>
+                                <p class="food-address">📍 {{ item.pickup_address }}</p>
+                                {% if item.instructions %}
+                                    <p class="food-instructions">ℹ️ {{ item.instructions }}</p>
+                                {% endif %}
+                            </div>
+                            <form method="POST" action="/ngo/request-food" class="food-card-footer">
+                                <input type="hidden" name="food_id" value="{{ item.id }}">
+                                <div class="request-row">
+                                    <div class="form-group inline-form">
+                                        <label>People we'll feed</label>
+                                        <input type="number" name="people_count" placeholder="50" min="1" required>
+                                    </div>
+                                    <div class="form-group inline-form">
+                                        <label>ETA for pickup</label>
+                                        <input type="time" name="pickup_eta" required>
+                                    </div>
+                                </div>
+                                <textarea name="message" placeholder="Message to hotel (optional)..." rows="2" class="request-msg"></textarea>
+                                <button type="submit" class="btn btn-ngo btn-full">💛 Request This Food</button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-icon">🍽️</div>
+                            <p>No surplus food available right now. Check back soon!</p>
+                            <p class="empty-sub">Hotels typically post after lunch and dinner service.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <!-- My Requests -->
+        <section class="dash-section" id="myrequests">
+            <div class="section-card">
+                <h2 class="card-heading">📬 My Food Requests</h2>
+                {% if my_requests %}
+                    <div class="requests-table">
+                        <div class="table-header">
+                            <span>Food</span><span>Hotel</span><span>Quantity</span><span>Pickup ETA</span><span>Status</span>
+                        </div>
+                        {% for req in my_requests %}
+                        <div class="table-row">
+                            <span>{{ req.food_name }}</span>
+                            <span>{{ req.hotel_name }}</span>
+                            <span>{{ req.quantity }} {{ req.unit }}</span>
+                            <span>{{ req.pickup_eta }}</span>
+                            <span class="status-badge status-{{ req.status }}">{{ req.status | capitalize }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>You haven't made any requests yet. Browse available food above!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Community Impact -->
+        <section class="dash-section" id="impact">
+            <div class="section-card">
+                <h2 class="card-heading">❤️ Community Impact</h2>
+                <div class="impact-grid">
+                    <div class="impact-card impact-ngo">
+                        <span class="impact-num">{{ impact.people_fed or 0 }}</span>
+                        <span class="impact-label">People Fed</span>
+                    </div>
+                    <div class="impact-card impact-ngo">
+                        <span class="impact-num">{{ impact.pickups or 0 }}</span>
+                        <span class="impact-label">Successful Pickups</span>
+                    </div>
+                    <div class="impact-card impact-ngo">
+                        <span class="impact-num">{{ impact.hotels_partnered or 0 }}</span>
+                        <span class="impact-label">Hotel Partners</span>
+                    </div>
+                    <div class="impact-card impact-ngo">
+                        <span class="impact-num">{{ impact.meals_this_month or 0 }}</span>
+                        <span class="impact-label">Meals This Month</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+function filterFood() {
+    const search = document.getElementById('search-food').value.toLowerCase();
+    const type = document.getElementById('filter-type').value.toLowerCase();
+    const category = document.getElementById('filter-category').value.toLowerCase();
+    document.querySelectorAll('.food-card').forEach(card => {
+        const matchSearch = !search || card.dataset.name.includes(search);
+        const matchType = !type || card.dataset.type === type;
+        const matchCat = !category || card.dataset.category.toLowerCase() === category;
+        card.style.display = (matchSearch && matchType && matchCat) ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}

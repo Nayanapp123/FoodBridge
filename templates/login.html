@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Login — FoodBridge{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-left">
+        <h2 class="auth-tagline">"Every plate of<br>surplus food is a<br><span class="accent">story of hope."</span></h2>
+        <p class="auth-quote-sub">Join 245+ partners reducing food waste across the city.</p>
+    </div>
+
+    <div class="auth-box">
+        <div class="auth-logo">🌉 FoodBridge</div>
+        <h1 class="auth-title">Welcome back</h1>
+
+        <div class="toggle-tabs">
+            <button class="tab-btn active" id="tab-hotel" onclick="switchTab('hotel')">🏨 Hotel / Restaurant</button>
+            <button class="tab-btn" id="tab-ngo" onclick="switchTab('ngo')">💛 NGO</button>
+        </div>
+
+        <form method="POST" action="/login" class="auth-form" id="login-form">
+            <input type="hidden" name="user_type" id="user_type" value="hotel">
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="login-btn">Login as Hotel</button>
+        </form>
+
+        <p class="auth-switch">Don't have an account? <a href="/register">Register here</a></p>
+    </div>
+</div>
+
+<script>
+function switchTab(type) {
+    document.getElementById('user_type').value = type;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + type).classList.add('active');
+    document.getElementById('login-btn').textContent = type === 'hotel' ? 'Login as Hotel' : 'Login as NGO';
+}
+const params = new URLSearchParams(window.location.search);
+if (params.get('type') === 'ngo') switchTab('ngo');
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}FoodBridge — Bridging Surplus to Need{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-badge">Zero Hunger Initiative</div>
+        <h1 class="hero-title">Food <span class="accent">too good</span> to waste.<br>Communities <span class="accent">too good</span> to ignore.</h1>
+        <p class="hero-subtitle">FoodBridge connects hotels and restaurants with NGOs to ensure surplus food reaches those who need it most — fresh, fast, and with dignity.</p>
+        <div class="hero-cta">
+            <a href="/login?type=hotel" class="btn btn-primary">I'm a Hotel / Restaurant</a>
+            <a href="/login?type=ngo" class="btn btn-secondary">I'm an NGO</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">Meals Shared</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat"><span class="stat-num">180+</span><span class="stat-label">Hotels Onboard</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat"><span class="stat-num">65+</span><span class="stat-label">NGO Partners</span></div>
+        </div>
+    </div>
+    <div class="hero-visual">
+    <img src="{{ url_for('static', filename='home.png') }}" 
+         alt="Food Bridge"
+         style="width:100%; max-height:300px; object-fit:cover; border-radius:20px; margin-bottom:1rem;">
+    <div class="hero-card card-float">
+        <div class="card-icon">🍱</div>
+        <div>
+
+                <p class="card-title">Fresh Biryani — 40 Portions</p>
+                <p class="card-sub">Best before: 3 hours · Grand Palace Hotel</p>
+            </div>
+            <span class="badge-live">Live</span>
+        </div>
+        <div class="hero-card card-float-2">
+            <div class="card-icon">✅</div>
+            <div>
+                <p class="card-title">Claimed by Hope Foundation</p>
+                <p class="card-sub">Pickup in 30 mins</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="section-container">
+        <h2 class="section-title">How it <span class="accent">works</span></h2>
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-num">01</div>
+                <div class="step-icon">🏨</div>
+                <h3>Hotel Lists Surplus</h3>
+                <p>After events or service hours, hotels log leftover food with type, quantity, and freshness window.</p>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step">
+                <div class="step-num">02</div>
+                <div class="step-icon">📡</div>
+                <h3>NGOs Get Notified</h3>
+                <p>Registered NGOs instantly see available food in their area and can request a pickup.</p>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step">
+                <div class="step-num">03</div>
+                <div class="step-icon">🤝</div>
+                <h3>Food Reaches People</h3>
+                <p>Surplus becomes sustenance. Zero waste. Maximum impact. Real community change.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="join-cta">
+    <div class="join-inner">
+        <h2>Ready to make a difference?</h2>
+        <p>Join the FoodBridge network today — free for hotels and NGOs.</p>
+        <div class="join-buttons">
+            <a href="/login?type=hotel" class="btn btn-primary">Register as Hotel</a>
+            <a href="/login?type=ngo" class="btn btn-secondary">Register as NGO</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
