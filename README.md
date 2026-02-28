@@ -33,17 +33,9 @@ NGOs can view and request available food, ensuring timely and efficient redistri
 ### Technologies/Components Used
 
 **For Software:**
-- Languages used: [e.g., JavaScript, Python, Java]
-- Frameworks used: [e.g., React, Django, Spring Boot]
-- Libraries used: [e.g., axios, pandas, JUnit]
-- Tools used: [e.g., VS Code, Git, Docker]
+- Languages used: HTML,CSS,Python
 
-**For Hardware:**
-- Main components: [List main components]
-- Specifications: [Technical specifications]
-- Tools required: [List tools needed]
-
----
+- Tools used: VS Code, Git, Render
 
 ## Features
 
@@ -95,17 +87,12 @@ python app.py
 
 #### Diagrams
 
-**System Architecture:**
-
-![Architecture Diagram](docs/architecture.png)
-*Explain your system architecture - components, data flow, tech stack interaction*
 
 **Application Workflow:**
 ![WhatsApp Image 2026-02-28 at 9 40 06 AM](https://github.com/user-attachments/assets/e023443a-c0a5-4a92-8f40-35d6bdc7eebd)
 
 
-![Workflow](docs/workflow.png)
-*Add caption explaining your workflow*
+*Flowchart: Hotel logs surplus food → system notifies nearby NGOs → NGO accepts and confirms pickup → food collected and impact dashboard updated (meals saved, CO₂ reduced).*
 
 ---
 
@@ -123,33 +110,6 @@ python app.py
 
 ---
 
-## AI Tools Used (Optional - For Transparency Bonus)
-
-If you used AI tools during development, document them here for transparency:
-
-**Tool Used:** [e.g., GitHub Copilot, v0.dev, Cursor, ChatGPT, Claude]
-
-**Purpose:** [What you used it for]
-- Example: "Generated boilerplate React components"
-- Example: "Debugging assistance for async functions"
-- Example: "Code review and optimization suggestions"
-
-**Key Prompts Used:**
-- "Create a REST API endpoint for user authentication"
-- "Debug this async function that's causing race conditions"
-- "Optimize this database query for better performance"
-
-**Percentage of AI-generated code:** [Approximately X%]
-
-**Human Contributions:**
-- Architecture design and planning
-- Custom business logic implementation
-- Integration and testing
-- UI/UX design decisions
-
-*Note: Proper documentation of AI usage demonstrates transparency and earns bonus points in evaluation!*
-
----
 
 ## Team Contributions
 
@@ -157,17 +117,6 @@ If you used AI tools during development, document them here for transparency:
 - [Name 2]: [Specific contributions - e.g., Backend development, Database design, etc.]
 - [Name 3]: [Specific contributions - e.g., UI/UX design, Testing, Documentation, etc.]
 
----
 
-## License
-
-This project is licensed under the [LICENSE_NAME] License - see the [LICENSE](LICENSE) file for details.
-
-**Common License Options:**
-- MIT License (Permissive, widely used)
-- Apache 2.0 (Permissive with patent grant)
-- GPL v3 (Copyleft, requires derivative works to be open source)
-
----
 
 Made with ❤️ at TinkerHub
